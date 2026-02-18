@@ -11,7 +11,7 @@ import AuthGuard from "./auth/AuthGuard.jsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CreatePost from "./pages/CreatePost.jsx";
-import EditPost from "./pages/EditPost.jsx";
+import EditPost from "./pages/Editpost.jsx"; // ✅ Added
 import PostDetails from "./pages/PostDetails.jsx";
 import Analytics from "./pages/Analytics.jsx";
 
@@ -66,7 +66,7 @@ function App() {
       ),
     },
      {
-      path: "/post-details/:postId", // ✅ Dynamic Route
+      path: "/post-details/:id", // ✅ Dynamic Route
       element: (
         <AuthGuard required={true}>
           <PostDetails  />
