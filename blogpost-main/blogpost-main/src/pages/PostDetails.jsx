@@ -11,7 +11,7 @@ const PostDetails = () => {
 
     const fetchPostDetails = async () => {
         try {
-            const response = await fetch(`http://localhost:3001/posts/${window.location.pathname.split("/post/")[1]}`);
+            const response = await fetch(`http://localhost:3000/posts/${window.location.pathname.split("/post/")[1]}`);
             const data = await response.json();
             setPost(data);
         } catch (error) {

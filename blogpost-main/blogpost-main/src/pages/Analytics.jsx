@@ -72,7 +72,7 @@ const Analytics = () => {
 
 const handleDelete = async (post) => {
     try {
-      await fetch(`http://localhost:3001/posts/${post.id}`, {
+      await fetch(`http://localhost:3000/posts/${post.id}`, {
         method: "DELETE",
       });
       setPosts(posts.filter((p) => p.id !== post.id));

@@ -37,7 +37,7 @@ useEffect(() => {
         setIsEditMode(true);
         const fetchPostToEdit = async () => {
             try {
-                const response = await fetch(`http://localhost:3001/posts/${id}`);
+                const response = await fetch(`http://localhost:3000/posts/${id}`);
                 if(response.ok){
                     const post = await response.json();
                 setFormData({
@@ -100,7 +100,7 @@ const handleSubmit = (e) => {
             createAt: new Date().toISOString(),
         };
         if (isEditMode) {
-            fetch(`http://localhost:3001/posts/${id}`, {
+            fetch(`http://localhost:3000/posts/${id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -122,7 +122,7 @@ const handleSubmit = (e) => {
             });
             
         } else {
-            fetch("http://localhost:3001/posts", {
+            fetch("http://localhost:3000/posts", {
                 method: "POST", 
                 headers: {
                     "Content-Type": "application/json",

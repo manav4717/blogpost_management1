@@ -1,14 +1,14 @@
 {
-  "name": "blogpost-management1",
+  "name": "blogpost",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "server": "json-server --watch db.json --port 3000",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview",
-    "server": "json-server --watch db.json --port 3001"
+    "preview": "vite preview"
   },
   "dependencies": {
     "json-server": "^1.0.0-beta.5",
@@ -18,7 +18,7 @@
     "react-router-dom": "^7.13.0",
     "react-toastify": "^11.0.5",
     "recharts": "^3.7.0",
-    "server": "^1.0.42"
+    "server": "^0.0.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

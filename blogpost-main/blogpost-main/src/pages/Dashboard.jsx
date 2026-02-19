@@ -14,7 +14,7 @@ const Dashboard = () => {
 
    const fetchData = async () => {
     try {
-      const response = await fetch("http://localhost:3001/posts");
+      const response = await fetch("http://localhost:3000/posts");
       const data = await response.json();
       setPosts(data);
     } catch (error) {
@@ -39,7 +39,7 @@ const handleView = (post) => {
 
 const handleDelete = async (id) => {
     try {
-      await fetch(`http://localhost:3001/posts/${id}`, {
+      await fetch(`http://localhost:3000/posts/${id}`, {
         method: "DELETE",
       });
       setPosts(posts.filter((post) => post.id !== id));
@@ -48,14 +48,7 @@ const handleDelete = async (id) => {
       toast.error("Failed to delete post");
     }
   };
-  const loginData = JSON.parse(localStorage.getItem("loginData") || "{}");
-  const currentUser = loginData?.email?.split("@")[0] || "User";
 
- const totalPosts = posts.length;
-  const userPosts = posts.filter(
-    (post) => post.author?.toLowerCase() === currentUser.toLowerCase()
-  ).length;
-  const communityPosts = totalPosts - userPosts;  
 
   return (
 
@@ -74,24 +67,24 @@ const handleDelete = async (id) => {
         <div className="dashboard-stats-overview">
           <div className="dash-card">
             <h3>Total Posts</h3>
-            <span className="dash-number">{totalPosts}</span>
+            <span className="dash-number">10</span>
           </div>
 
           <div className="dash-card">
             <h3>Total Stories</h3>
-            <span className="dash-number">{userPosts}</span>
+            <span className="dash-number">5</span>
           </div>
 
           <div className="dash-card">
             <h3>Community Posts</h3>
-            <span className="dash-number">{communityPosts}</span>
+            <span className="dash-number">10</span>
           </div>
         </div>
 
         <section className="posts-section">
           <div className="section-header">
             <h2 className="section-title">Recent Feed</h2>
-            <button className="create-shortcut-btn" onClick={()=>navigate("/creat-post")}>
+            <button className="create-shortcut-btn">
               <FaPlus /> New Post
             </button>
           </div>
