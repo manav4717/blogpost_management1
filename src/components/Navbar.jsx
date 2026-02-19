@@ -12,6 +12,9 @@ import "./Navbar.css";
 import { useTheme } from "./context/ThemeContext";
 import "./context/Theme.css";
 import { useNavigate } from "react-router-dom";
+import { GiAlienStare } from "react-icons/gi";
+import "../pages/Favorites"
+
 
 const Navbar = () => {
   const user = JSON.parse(localStorage.getItem("authData"));
@@ -45,6 +48,10 @@ const Navbar = () => {
 
           <NavLink to="/analytics" className="nav-item">
             <FaChartLine className="nav-icon" /> Analytics
+          </NavLink>
+
+           <NavLink to="/Favorites" className="nav-item">
+            <GiAlienStare  className="nav-icon" /> Favorites
           </NavLink>
         </div>
 

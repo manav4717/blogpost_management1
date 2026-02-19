@@ -6,6 +6,7 @@ import { FaPlus } from 'react-icons/fa';
 import './Dashboard.css'
 import {useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import Favorites from './Favorites';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -105,6 +106,11 @@ const handleDelete = async (id) => {
                   alt={post.title}
                   className="post-card-image"
                 />
+                <button
+                     className={`favorite-btn  ${Favorites.includes(post.id)?'active':''}`}
+                     >
+                      <FaStar size={22} color="#ffffff"/>
+                     </button>
 
                 <div className="post-actions">
                   <button
