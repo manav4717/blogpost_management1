@@ -1,19 +1,21 @@
-
-import Navbar from '../components/Navbar';
+import Navbar from "../components/Navbar";
 import { Navigate, useNavigate } from "react-router-dom";
-import { MdEdit, MdDelete } from 'react-icons/md';
-import { FaPlus } from 'react-icons/fa';
-import './Dashboard.css'
-import {useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
-import Favorites from './Favorites';
+import { MdEdit, MdDelete } from "react-icons/md";
+import { FaPlus, FaStar } from "react-icons/fa";
+import "./Dashboard.css";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import Favorites from "./Favorites";
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [favorites, setFavorites] = useState([]);
+  const user = JSON.parse(localStorage.getItem("authData"));
+  const [post, setPost] = useState([]);
 
-   const fetchData = async () => {
+  const fetchData = async () => {
     try {
       const response = await fetch("http://localhost:3001/posts");
       const data = await response.json();
@@ -22,23 +24,39 @@ const Dashboard = () => {
       console.log(error);
     }
   };
-  
-    useEffect(() => {
+
+  const toggleFavorite = (e, postId) => {
+    let newFavorites;
+    if (favorites.includes(postId)) {
+      newFavorites = favorites.filter((id) => id !== postId);
+      toast.info("Removed from favorites");
+    } else {
+      newFavorites = [...favorites, postId];
+      toast.success("Added to favorites");
+    }
+    setFavorites(newFavorites);
+    localStorage.setItem("favorites", JSON.stringify(newFavorites));
+  };
+
+  useEffect(() => {
     fetchData();
+    const savedFavorites = JSON.parse(
+      localStorage.getItem("favorites") || "[]",
+    );
+    setFavorites(savedFavorites);
   }, []);
 
-
-   const handleEdit = (post) => {
+  const handleEdit = (post) => {
     navigate(`/edit-post/${post.id}`);
     toast.info("Redirecting to edit post...");
   };
 
-const handleView = (post) => {
+  const handleView = (post) => {
     navigate(`/post/${post.id}`);
     toast.info("Redirecting to post details...");
-}
+  };
 
-const handleDelete = async (id) => {
+  const handleDelete = async (id) => {
     try {
       await fetch(`http://localhost:3001/posts/${id}`, {
         method: "DELETE",
@@ -49,110 +67,116 @@ const handleDelete = async (id) => {
       toast.error("Failed to delete post");
     }
   };
-  const loginData = JSON.parse(localStorage.getItem("loginData") || "{}");
-  const currentUser = loginData?.email?.split("@")[0] || "User";
-
- const totalPosts = posts.length;
-  const userPosts = posts.filter(
-    (post) => post.author?.toLowerCase() === currentUser.toLowerCase()
-  ).length;
-  const communityPosts = totalPosts - userPosts;  
 
   return (
-
     <div className="dashboard-page">
-
-       <Navbar />
+      <Navbar />
 
       <main className="dashboard-main">
         <div className="dashboard-welcome">
           <div className="welcome-text">
-            <h1>Wellcome to your Dashboard</h1>
-            <p>Manage your posts, track engagement,and connect with your audience</p>
+            <h1>Wellcome to {user.name || "user"}</h1>
+            <p>
+              Manage your posts, track engagement,and connect with your audience
+            </p>
           </div>
         </div>
 
         <div className="dashboard-stats-overview">
           <div className="dash-card">
             <h3>Total Posts</h3>
-            <span className="dash-number">{totalPosts}</span>
+            <span className="dash-number">{posts.length}</span>
           </div>
 
           <div className="dash-card">
             <h3>Total Stories</h3>
-            <span className="dash-number">{userPosts}</span>
+            <span className="dash-number">{post.length}</span>
           </div>
 
           <div className="dash-card">
             <h3>Community Posts</h3>
-            <span className="dash-number">{communityPosts}</span>
+            <span className="dash-number">{posts.length}</span>
           </div>
         </div>
 
         <section className="posts-section">
           <div className="section-header">
             <h2 className="section-title">Recent Feed</h2>
-            <button className="create-shortcut-btn" onClick={()=>navigate("/creat-post")}>
+            <button
+              className="create-shortcut-btn"
+              onClick={() => navigate("/creat-post")}
+            >
               <FaPlus /> New Post
             </button>
           </div>
 
           <div className="posts-grid">
-        {( posts.map((post) => (
-            <div className="post-card" key={post.id}>
-              <div className=".post-image-container">
-                <img
-                  src={post.image || "https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=500"}
-                  alt={post.title}
-                  className="post-card-image"
-                />
-                <button
-                     className={`favorite-btn  ${Favorites.includes(post.id)?'active':''}`}
-                     >
-                      <FaStar size={22} color="#ffffff"/>
-                     </button>
-
-                <div className="post-actions">
+            {posts.map((post) => (
+              <div className="post-card" key={post.id}>
+                <div className=".post-image-container">
+                  <img
+                    src={
+                      post.image                    }
+                    alt={post.title}
+                    className="post-card-image"
+                  />
                   <button
-                    className="action-btn edit-btn"
-                    title="Edit Post" 
-                    onClick={() =>  handleEdit(post)}
+                    className={`favorites-btn ${favorites.includes(post.id) ? "active" : ""}`}
+                    onClick={(e) => toggleFavorite(e, post.id)}
                   >
-                    <MdEdit size={22} color="#ffffff" />
+                    <FaStar size={22} color="#ffffff" />
                   </button>
 
+                  <div className="post-actions">
+                    <button
+                      className="action-btn edit-btn"
+                      title="Edit Post"
+                      onClick={() => handleEdit(post)}
+                    >
+                      <MdEdit size={22} color="#ffffff" />
+                    </button>
+
+                    <button
+                      className="action-btn delete-btn"
+                      title="Delete Post"
+                      onClick={() => handleDelete(post.id)}
+                    >
+                      <MdDelete size={20} color="#ffffff" />
+                    </button>
+                  </div>
+                </div>
+
+                <div className="post-card-content">
+                  <div className="post-meta">
+                    <span className="post-author">
+                      By {post.author || "Anonymous"}
+                    </span>
+                    <span className="post-date">
+                      {post.date ||
+                        new Date(
+                          post.createdAt || Date.now(),
+                        ).toLocaleDateString()}
+                    </span>
+                  </div>
+
+                  <h3 className="post-card-title">{post.title}</h3>
+                  <p className="post-card-description">
+                    {post.description || post.content || post.excerpt}
+                  </p>
                   <button
-                    className="action-btn delete-btn"
-                    title="Delete Post"
-                    onClick={() => handleDelete(post.id)}
+                    className="read-more-btn"
+                    onClick={() => handleView(post)}
                   >
-                    <MdDelete size={20} color="#ffffff" />
+                    Read More
                   </button>
                 </div>
               </div>
-
-              <div className="post-card-content">
-                <div className="post-meta">
-                  <span className="post-author">By {post.author || "Anonymous"}</span>
-                  <span className="post-date">
-                    {post.date || new Date(post.createdAt || Date.now()).toLocaleDateString()}
-                  </span>
-                </div>
-
-                <h3 className="post-card-title">{post.title}</h3>
-                <p className="post-card-description">
-                  {post.description || post.content || post.excerpt}
-                </p>
-                <button className="read-more-btn" onClick={() => handleView(post)}>Read More</button>
-              </div>
-            </div>
-          ))
-        )}
-      </div>
+            ))}
+          </div>
         </section>
       </main>
     </div>
-  )
-}
+  );
+};
 
-export default Dashboard
+export default Dashboard;
